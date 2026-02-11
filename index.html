@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moscow Premium Estate — Лучшие новостройки Москвы</title>
+  <meta name="description" content="Премиальная недвижимость в центре Москвы. ЖК Life Time, Lucky, Nicole — эксклюзивные проекты от ведущих девелоперов." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0a0f'/><rect x='4' y='4' width='24' height='24' fill='none' stroke='%23c9a84c' stroke-width='2'/><text x='16' y='21' text-anchor='middle' font-family='Georgia' font-size='16' font-weight='600' fill='%23c9a84c'>M</text></svg>" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--gold:#c9a84c;--dark:#0a0a0f;--light:#f5f0eb;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Outfit',sans-serif}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);background:var(--dark);color:#fff;overflow-x:hidden}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes pulse{0%,100%{opacity:.4}50%{opacity:.8}}
+    select option{background:#1a1a2e;color:#fff}
+    input:focus,select:focus,textarea:focus{border-color:var(--gold)!important;outline:none}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:var(--dark)}
+    ::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+    @media(max-width:900px){.desktop-nav{display:none!important}.mobile-burger{display:flex!important}}
+    @media(max-width:768px){
+      .grid-2{grid-template-columns:1fr!important}
+      .grid-3{grid-template-columns:1fr!important}
+      .grid-4{grid-template-columns:1fr 1fr!important}
+      .hero-stats{flex-direction:column;gap:12px!important}
+      .apt-card{grid-template-columns:1fr!important}
+      .compare-table{font-size:12px!important}
+      .compare-table td,.compare-table th{padding:10px 8px!important}
+    }
+    @media(max-width:500px){
+      .grid-4{grid-template-columns:1fr!important}
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const{useState,useEffect,useRef,useMemo}=React;
+
+    /* ===================== DATA ===================== */
+    const PROJECTS={
+      lifetime:{
+        name:"Life Time",
+        tagline:"Время для жизни на Пресне",
+        cls:"Премиум",
+        developer:"Sminex",
+        address:"Москва, ул. Сергея Макеева, 11/9",
+        metro:"Улица 1905 года",
+        metroTime:"11 мин",
+        delivery:"II кв. 2026",
+        floors:"2–23",
+        ceilings:"3.28–3.54 м",
+        apartments:"511",
+        area:"50–309 м²",
+        priceFrom:"от 61 млн ₽",
+        pricePerM:"от 606 тыс ₽/м²",
+        parking:"Подземный",
+        territory:"3.2 га",
+        hero:"linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)",
+        accent:"#c9a84c",
+        description:"Роскошный квартал Life Time дарит время для жизни в быстро растущем премиальном районе ЦАО — на Пресне. Беспрецедентно исчерпывающая инфраструктура и расположение дарят бесценное время жителям. Вы больше не тратите его на дорогу или ожидание, при этом ни в чём себе не отказывая.",
+        descriptionFull:"Life Time находится в центре сложившегося премиального района, в окружении многочисленных парков. Удобная транспортная доступность и прямой выезд на Звенигородское шоссе позволяют без проблем добраться до Садового кольца и Москва-Сити. Архитектурный стиль квартала — роскошный минимализм от бюро «Цимайло Ляшенко и Партнёры». Дома десятилетиями будут выглядеть современно. Интерьеры просторных лобби с дизайнерской мебелью выполнены с отделкой из дорогостоящих материалов.",
+        features:[
+          {icon:"🏛",title:"Роскошный минимализм",text:"Архитектура от бюро «Цимайло Ляшенко и Партнёры» — концептуальные фасады, ярко выраженный харизматичный стиль, современная роскошь минимализма"},
+          {icon:"🌳",title:"Двор-парк 1,8 га",text:"Всепогодный парк с водоёмами, ручьём, сухим фонтаном, насыщенным озеленением и сетью прогулочных дорожек"},
+          {icon:"🏊",title:"Clubhouse",text:"Инфраструктурный центр в отдельном здании: бассейн 25 м, хот-таб, хаммам, сауна, бьюти-зона, фитнес-зал FIT LAB"},
+          {icon:"🏫",title:"Школа и детский сад",text:"Престижная частная начальная школа Heritage International School и детский сад на территории квартала"},
+          {icon:"🏙",title:"Виды на Москва-Сити",text:"Панорамные окна с видами на деловой центр, сталинские высотки, Останкинскую башню и Москву-реку"},
+          {icon:"🏠",title:"Особые форматы",text:"Двухэтажные пентхаусы с каминами и террасами, скай-виллы с видами, квартиры от 2 до 5 комнат"},
+        ],
+        photos:[
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/dvor-2-1.jpg",caption:"Двор-парк Life Time"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/lobby-2.jpg",caption:"Лобби с дизайнерской мебелью"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/dvor-19-vertikal.jpg",caption:"Благоустроенная территория"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/dvor-13.jpg",caption:"Ландшафтный дизайн двора"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/sport-ploshadka-workout.jpg",caption:"Спортивная площадка"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/clubhouse-1.png",caption:"Clubhouse"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/penthaus.jpg",caption:"Пентхаус с террасой"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/dvor-18.jpg",caption:"Фасад в стиле роскошного минимализма"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/roskoshnyy-eksterer/skayvilla-new.jpg",caption:"Скай-вилла"},
+          {url:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/about/image.png",caption:"Интерьер квартиры"},
+        ],
+        heroImg:"https://storage.yandexcloud.net/s3smx-site-sminex-media/prod/mocks/public/images/sites/life-time/header/lt.jpg",
+        nearby:["Красногвардейские пруды — 300 м","Парк Декабрьского восстания — 650 м","Парк «Красная Пресня» — 750 м","Московский зоопарк","Москва-Сити — 2.5 км","Садовое кольцо — 2 км"],
+        finishType:"Без отделки",
+        security:"КПП, видеонаблюдение, консьерж",
+        heating:"Собственная котельная",
+      },
+      lucky:{
+        name:"Lucky",
+        tagline:"Квартал для осознанной жизни",
+        cls:"Премиум / Элит",
+        developer:"Vesper",
+        address:"Москва, 2-я Звенигородская ул., 12",
+        metro:"Улица 1905 года",
+        metroTime:"6 мин",
+        delivery:"Сдан (2023)",
+        floors:"13–21",
+        ceilings:"до 7.5 м (2-й свет)",
+        apartments:"654",
+        area:"44–451 м²",
+        priceFrom:"от 108 млн ₽",
+        pricePerM:"от 1.5 млн ₽/м²",
+        parking:"Подземный, 979 м/м",
+        territory:"4.5 га",
+        hero:"linear-gradient(135deg,#0d0d0d 0%,#1a1a1a 50%,#2d2d2d 100%)",
+        accent:"#e8c872",
+        description:"Lucky — переосмысление пространства площадью более 4,5 гектаров в центре Москвы. Это социокультурный кластер с современными жилыми домами, историческими зданиями и собственными парковыми зонами. Новый подход к формированию пространств, который не был реализован ни в одной мировой столице.",
+        descriptionFull:"Жилой квартал Lucky делится на «верхний» и «нижний» город. Верхний город — 8 монолитных зданий от 13 до 21 этажа с модульным фасадом от Reynaers Aluminium. Архитектурный проект разработан бюро Юрия Григоряна «Меганом». Все квартиры с дизайнерской чистовой отделкой, включая итальянскую кухню Dada и сантехнику. В нижнем городе — инфраструктура площадью 10 тыс. кв. м в реставрированных исторических зданиях.",
+        features:[
+          {icon:"🏗",title:"8 жилых домов",text:"Восемь монолитных зданий от 13 до 21 этажа по проекту бюро «Меганом» Юрия Григоряна. Модульный фасад от Reynaers Aluminium"},
+          {icon:"🌿",title:"5 парков и скверов",text:"Европейский ландшафт: центральная площадь, зелёные лабиринты, аллеи, два сада и французский парк с боскетами"},
+          {icon:"🏢",title:"Офисы класса А",text:"Три бизнес-центра класса А в двух шагах от жилых домов — идеальный work-life balance"},
+          {icon:"👶",title:"Детская инфраструктура",text:"Детский сад, образовательный центр, художественные мастерские, танцевальные студии, школа иностранных языков"},
+          {icon:"🏊",title:"Всесезонный бассейн",text:"Бассейн на крыше с подогревом, фитнес-центр, воркаут-зоны, студии бокса и фехтования"},
+          {icon:"🍽",title:"Гастрономия и event",text:"Фермерский маркет, кофейни, рестораны, event-холл с открытым амфитеатром для лекций и концертов"},
+        ],
+        photos:[
+          {url:"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",caption:"Современная архитектура квартала Lucky"},
+          {url:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",caption:"Благоустроенная территория"},
+          {url:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",caption:"Панорамное остекление"},
+          {url:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop",caption:"Интерьер квартиры с отделкой"},
+          {url:"https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=800&h=500&fit=crop",caption:"Фасады в вечернем освещении"},
+          {url:"https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop",caption:"Ландшафтный дизайн"},
+        ],
+        heroImg:"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1400&h=800&fit=crop",
+        nearby:["Парк Декабрьского восстания — 5 мин","Парк «Красная Пресня» — 15 мин","Красногвардейские пруды — 10 мин","Московский зоопарк — 15 мин","Набережная Москвы-реки","Москва-Сити — 2.5 км"],
+        finishType:"Дизайнерская чистовая (кухня Dada)",
+        security:"ЧОП, видеонаблюдение, консьерж, закрытая территория",
+        heating:"Центральное",
+      },
+      nicole:{
+        name:"Nicole",
+        tagline:"Новая история старого города",
+        cls:"Deluxe",
+        developer:"MR Group (MR Private)",
+        address:"Москва, ул. Никольская, 8/1",
+        metro:"Площадь Революции",
+        metroTime:"1 мин",
+        delivery:"III кв. 2027 — I кв. 2028",
+        floors:"3–8",
+        ceilings:"3.05–6.4 м",
+        apartments:"~170",
+        area:"59–686 м²",
+        priceFrom:"от 196 млн ₽",
+        pricePerM:"от 2.4 млн ₽/м²",
+        parking:"Подземный",
+        territory:"3 га",
+        hero:"linear-gradient(135deg,#1b0a2e 0%,#2d1b4e 50%,#4a1942 100%)",
+        accent:"#d4a574",
+        description:"Nicole — новая глава в истории Китай-города. Проект, который бросает вызов времени. В эпоху нового времени истинная роскошь сочетает в себе традиции прошлого и смелость будущего. Многофункциональное пространство для жизни в двух минутах от Кремля.",
+        descriptionFull:"Проект Nicole — уникальный редевелопмент от MR Private (подразделение элитной недвижимости MR Group). Три пространства — Club, Residence и Collection — каждое со своей атмосферой. Архитектурная концепция от Heatherwick Studio (1000 Trees, Шанхай; Little Island, Нью-Йорк) и Paris Classical Architecture. Дизайн общественных пространств — студия HBA (Four Seasons, Mandarin, Ritz Carlton). Интерьеры квартир — COHO. Реставрация Чижовского подворья XVIII–XIX веков.",
+        features:[
+          {icon:"🏰",title:"2 минуты от Кремля",text:"Уникальная локация у Красной площади. В 5-минутной доступности 3 станции метро: Площадь Революции, Театральная, Лубянка"},
+          {icon:"🎨",title:"Heatherwick Studio",text:"Архитектурная концепция от бюро, создавшего 1000 Trees в Шанхае и Little Island в Нью-Йорке. Проект станет мировым архитектурным событием"},
+          {icon:"🏡",title:"Club, Residence, Collection",text:"Три мира: Club — общественное пространство, Residence — семейные резиденции, Collection — камерные квартиры с авторским дизайном"},
+          {icon:"🏛",title:"Историческое наследие",text:"Бережная реставрация Чижовского подворья XVIII–XIX веков. Реконструированные исторические здания — часть квартала"},
+          {icon:"🎭",title:"Культурный кластер",text:"Премиальный ритейл, рестораны высокой кухни, изысканные бутики, современные рабочие пространства, культурные центры"},
+          {icon:"✨",title:"Авторские интерьеры",text:"Дизайн HBA (Four Seasons, Ritz Carlton) и COHO: натуральный камень, мрамор, травертин, матовый никель, кирпич ручной формовки"},
+        ],
+        photos:[
+          {url:"https://nicole.ru/assets/images/media/landing/1.intro/intro-image@md.webp",caption:"Фасад Nicole на Никольской"},
+          {url:"https://nicole.ru/assets/images/media/landing/6.architecture/background@md.webp",caption:"Изысканная архитектура"},
+          {url:"https://nicole.ru/assets/images/media/landing/7.design/image@md.webp",caption:"Архитектурный дизайн Heatherwick Studio"},
+          {url:"https://nicole.ru/assets/images/media/landing/9.slider/1@xs.webp",caption:"Club — угол Никольской ул."},
+          {url:"https://nicole.ru/assets/images/media/landing/9.slider/2@xs.webp",caption:"Club — арка на Никольскую"},
+          {url:"https://nicole.ru/assets/images/media/landing/9.slider/4@xs.webp",caption:"Collection — благоустройство двора"},
+          {url:"https://nicole.ru/assets/images/media/landing/9.slider/6@xs.webp",caption:"Collection — фасад с Богоявленского пер."},
+          {url:"https://nicole.ru/assets/images/media/landing/9.slider/7@xs.webp",caption:"Collection — вид со Старопанского пер."},
+        ],
+        heroImg:"https://nicole.ru/assets/images/media/landing/1.intro/intro-image@md.webp",
+        nearby:["Красная площадь — 2 мин","Парк Зарядье — 5 мин","ГУМ — 3 мин","Большой театр — 10 мин","Александровский сад","Кремлёвская набережная"],
+        finishType:"Предчистовая / MR Base",
+        security:"Закрытая территория, консьерж, видеонаблюдение",
+        heating:"Центральное",
+      },
+    };
+
+    /* ===================== APARTMENTS DATA ===================== */
+    const APARTMENTS={
+      lifetime:[
+        {id:"LT-001",rooms:2,area:55,floor:2,building:"F",price:67.7,view:"Во двор",finish:"Без отделки",ceilings:3.28},
+        {id:"LT-002",rooms:2,area:66,floor:2,building:"A",price:64.3,view:"Во двор",finish:"Без отделки",ceilings:3.28},
+        {id:"LT-003",rooms:3,area:67,floor:2,building:"A",price:64.5,view:"Во двор",finish:"Без отделки",ceilings:3.28},
+        {id:"LT-004",rooms:3,area:78,floor:7,building:"B",price:82.4,view:"Двор + город",finish:"Без отделки",ceilings:3.43},
+        {id:"LT-005",rooms:3,area:89,floor:12,building:"C",price:95.2,view:"Москва-Сити + двор",finish:"Без отделки",ceilings:3.43},
+        {id:"LT-006",rooms:3,area:95,floor:15,building:"D",price:108.5,view:"Москва-Сити",finish:"Без отделки",ceilings:3.43},
+        {id:"LT-007",rooms:4,area:105,floor:12,building:"A",price:118.8,view:"Москва-Сити + Останкино",finish:"Без отделки",ceilings:3.43},
+        {id:"LT-008",rooms:4,area:128,floor:18,building:"C",price:148.2,view:"Панорама 270°",finish:"Без отделки",ceilings:3.54},
+        {id:"LT-009",rooms:4,area:162,floor:12,building:"B",price:175.4,view:"Москва-Сити + центр",finish:"Без отделки",ceilings:3.43},
+        {id:"LT-010",rooms:5,area:198,floor:20,building:"D",price:234.6,view:"Панорама 360°",finish:"Без отделки",ceilings:3.54},
+        {id:"LT-011",rooms:5,area:245,floor:22,building:"A",price:312.8,view:"Москва-Сити + река",finish:"Без отделки",ceilings:3.54},
+        {id:"LT-012",rooms:"Пентхаус",area:309,floor:23,building:"C",price:425.0,view:"Панорама с террасой",finish:"Без отделки + камин",ceilings:3.54},
+        {id:"LT-013",rooms:"Скай-вилла",area:370,floor:"22-23",building:"D",price:560.0,view:"Панорама + терраса 80 м²",finish:"Без отделки + камин",ceilings:"6.7 (2-й свет)"},
+        {id:"LT-014",rooms:2,area:58,floor:5,building:"E",price:71.5,view:"Город",finish:"Без отделки",ceilings:3.28},
+        {id:"LT-015",rooms:3,area:82,floor:9,building:"F",price:92.8,view:"Двор-парк",finish:"Без отделки",ceilings:3.43},
+        {id:"LT-016",rooms:4,area:142,floor:16,building:"A",price:165.3,view:"Москва-Сити",finish:"Без отделки",ceilings:3.54},
+        {id:"LT-017",rooms:3,area:75,floor:6,building:"B",price:78.9,view:"Двор",finish:"Без отделки",ceilings:3.43},
+        {id:"LT-018",rooms:5,area:220,floor:21,building:"C",price:285.0,view:"Панорама",finish:"Без отделки",ceilings:3.54},
+      ],
+      lucky:[
+        {id:"LK-001",rooms:1,area:45,floor:3,building:"1",price:108.3,view:"Двор",finish:"Дизайнерская",ceilings:3.0},
+        {id:"LK-002",rooms:2,area:65,floor:8,building:"2",price:142.5,view:"Парк",finish:"Дизайнерская (Dada)",ceilings:3.0},
+        {id:"LK-003",rooms:2,area:78,floor:12,building:"3",price:178.4,view:"Город",finish:"Дизайнерская (Dada)",ceilings:3.0},
+        {id:"LK-004",rooms:3,area:95,floor:15,building:"4",price:215.8,view:"Москва-Сити",finish:"Дизайнерская (Dada)",ceilings:3.0},
+        {id:"LK-005",rooms:3,area:112,floor:18,building:"5",price:268.0,view:"Панорама",finish:"Дизайнерская (Dada)",ceilings:3.0},
+        {id:"LK-006",rooms:4,area:145,floor:20,building:"6",price:348.5,view:"Панорама 270°",finish:"Дизайнерская (Dada)",ceilings:3.0},
+        {id:"LK-007",rooms:4,area:179,floor:21,building:"7",price:425.0,view:"Москва-Сити + река",finish:"Дизайнерская (Dada)",ceilings:"4.8 (2-й свет)"},
+        {id:"LK-008",rooms:"Пентхаус",area:210,floor:21,building:"2",price:520.0,view:"Панорама + био-камин",finish:"Дизайнерская (Dada)",ceilings:"7.5 (2-й свет)"},
+        {id:"LK-009",rooms:"Пентхаус",area:305,floor:21,building:"4",price:680.0,view:"Панорама 360°",finish:"Дизайнерская + терраса",ceilings:"7.5 (2-й свет)"},
+        {id:"LK-010",rooms:"Пентхаус",area:451,floor:21,building:"1",price:903.4,view:"Панорама + терраса 41 м²",finish:"Индивидуальный проект",ceilings:"7.5 (2-й свет)"},
+        {id:"LK-011",rooms:1,area:49,floor:6,building:"3",price:115.0,view:"Сквер",finish:"Дизайнерская",ceilings:3.0},
+        {id:"LK-012",rooms:2,area:72,floor:10,building:"5",price:158.3,view:"Двор + город",finish:"Дизайнерская (Dada)",ceilings:3.0},
+        {id:"LK-013",rooms:3,area:105,floor:16,building:"7",price:245.6,view:"Город",finish:"Дизайнерская (Dada)",ceilings:3.0},
+        {id:"LK-014",rooms:4,area:160,floor:19,building:"8",price:385.0,view:"Панорама",finish:"Дизайнерская (Dada)",ceilings:3.0},
+      ],
+      nicole:[
+        {id:"NC-001",rooms:2,area:61,floor:3,building:"Club",price:231.0,view:"Никольская улица",finish:"MR Base",ceilings:3.05},
+        {id:"NC-002",rooms:2,area:78,floor:4,building:"Club",price:296.4,view:"Внутренний двор",finish:"MR Base",ceilings:3.05},
+        {id:"NC-003",rooms:2,area:95,floor:5,building:"Residence",price:361.0,view:"Исторический центр",finish:"MR Base",ceilings:3.05},
+        {id:"NC-004",rooms:3,area:128,floor:4,building:"Residence",price:486.4,view:"Кремль",finish:"MR Base",ceilings:3.05},
+        {id:"NC-005",rooms:3,area:164,floor:6,building:"Residence",price:623.6,view:"Панорама центра",finish:"MR Base",ceilings:3.05},
+        {id:"NC-006",rooms:4,area:235,floor:5,building:"Collection",price:845.8,view:"Кремль + Зарядье",finish:"Авторская COHO",ceilings:3.5},
+        {id:"NC-007",rooms:4,area:264,floor:7,building:"Collection",price:1005.2,view:"Панорама + терраса",finish:"Авторская COHO",ceilings:3.5},
+        {id:"NC-008",rooms:"Пентхаус",area:400,floor:7,building:"Collection",price:1061.4,view:"360° + терраса 120 м²",finish:"Индивидуальный проект",ceilings:"6.4 (2-й свет)"},
+        {id:"NC-009",rooms:"Таунхаус",area:330,floor:"1-3",building:"Collection",price:920.0,view:"Патио + отдельный вход",finish:"Авторская COHO",ceilings:3.5},
+        {id:"NC-010",rooms:"Двухуровн.",area:260,floor:"5-6",building:"Residence",price:780.0,view:"Кремль",finish:"MR Base",ceilings:"6.4 (2-й свет)"},
+        {id:"NC-011",rooms:2,area:72,floor:3,building:"Club",price:273.6,view:"Богоявленский пер.",finish:"MR Base",ceilings:3.05},
+        {id:"NC-012",rooms:3,area:145,floor:5,building:"Residence",price:551.0,view:"Двор",finish:"MR Base",ceilings:3.05},
+        {id:"NC-013",rooms:"Пентхаус",area:550,floor:"6-7",building:"Collection",price:1450.0,view:"Панорама + кинозал",finish:"Индивидуальный проект",ceilings:"6.4 (2-й свет)"},
+        {id:"NC-014",rooms:"Двухуровн.",area:160,floor:"4-5",building:"Residence",price:608.0,view:"Исторический центр",finish:"MR Base",ceilings:"6.0 (2-й свет)"},
+      ],
+    };
+
+    /* ===================== UTILITY COMPONENTS ===================== */
+    function Anim({children,delay=0,style={}}){
+      const[v,setV]=useState(false);const ref=useRef(null);
+      useEffect(()=>{const o=new IntersectionObserver(([e])=>{if(e.isIntersecting){setV(true);o.disconnect()}},{threshold:0.08});if(ref.current)o.observe(ref.current);return()=>o.disconnect()},[]);
+      return <div ref={ref} style={{opacity:v?1:0,transform:v?"translateY(0)":"translateY(50px)",transition:`all .9s cubic-bezier(.4,0,.2,1) ${delay}s`,...style}}>{children}</div>
+    }
+    function GoldDiv(){return<div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:16,padding:"40px 0"}}><div style={{width:80,height:1,background:"linear-gradient(90deg,transparent,var(--gold))"}}/><div style={{width:6,height:6,background:"var(--gold)",transform:"rotate(45deg)"}}/><div style={{width:80,height:1,background:"linear-gradient(90deg,var(--gold),transparent)"}}/></div>}
+    function Btn({text,accent="var(--gold)",onClick,large,full}){
+      const[h,setH]=useState(false);
+      return<button onClick={onClick} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{background:h?accent:"transparent",border:`1px solid ${accent}`,color:h?"#0a0a0f":accent,fontFamily:"var(--sans)",fontSize:large?14:12,letterSpacing:3,textTransform:"uppercase",fontWeight:400,padding:large?"18px 48px":"14px 36px",cursor:"pointer",transition:"all .4s cubic-bezier(.4,0,.2,1)",width:full?"100%":"auto"}}>{text}</button>
+    }
+    function formatPrice(p){return typeof p==="number"?p>=1000?(p/1000).toFixed(1)+" млрд ₽":p.toFixed(1)+" млн ₽":p}
+    function PhotoGallery({photos,accent}){
+      const[idx,setIdx]=useState(0);const[loaded,setLoaded]=useState({});
+      return<div>
+        <div style={{position:"relative",overflow:"hidden",borderRadius:0,marginBottom:12}}>
+          <img src={photos[idx].url} alt={photos[idx].caption} onLoad={()=>setLoaded(p=>({...p,[idx]:true}))} style={{width:"100%",height:"clamp(300px,40vw,520px)",objectFit:"cover",display:"block",transition:"opacity .4s",opacity:loaded[idx]?1:0}} />
+          {!loaded[idx]&&<div style={{position:"absolute",inset:0,background:"rgba(201,168,76,0.05)",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontFamily:"var(--serif)",color:"rgba(255,255,255,0.2)",fontSize:18,fontStyle:"italic"}}>Загрузка...</div></div>}
+          <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"16px 20px",background:"linear-gradient(transparent,rgba(0,0,0,.7))",fontSize:14,fontWeight:300,color:"rgba(255,255,255,.8)"}}>{photos[idx].caption}</div>
+          {photos.length>1&&<>
+            <button onClick={()=>setIdx(i=>(i-1+photos.length)%photos.length)} style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,.5)",border:`1px solid ${accent}40`,color:"#fff",width:40,height:40,cursor:"pointer",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+            <button onClick={()=>setIdx(i=>(i+1)%photos.length)} style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,.5)",border:`1px solid ${accent}40`,color:"#fff",width:40,height:40,cursor:"pointer",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center"}}>›</button>
+          </>}
+        </div>
+        <div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:4}}>
+          {photos.map((p,i)=><img key={i} src={p.url} alt="" onClick={()=>setIdx(i)} style={{width:80,height:56,objectFit:"cover",cursor:"pointer",border:idx===i?`2px solid ${accent}`:"2px solid transparent",opacity:idx===i?1:.5,transition:"all .3s",flexShrink:0}} />)}
+        </div>
+      </div>
+    }
+
+    /* ===================== NAVIGATION ===================== */
+    function Nav({page,setPage}){
+      const[sc,setSc]=useState(false);const[mo,setMo]=useState(false);
+      useEffect(()=>{const h=()=>setSc(window.scrollY>60);window.addEventListener("scroll",h);return()=>window.removeEventListener("scroll",h)},[]);
+      const items=[{id:"home",l:"Главная"},{id:"lifetime",l:"Life Time"},{id:"lucky",l:"Lucky"},{id:"nicole",l:"Nicole"},{id:"compare",l:"Сравнение"},{id:"contacts",l:"Контакты"}];
+      return<nav style={{position:"fixed",top:0,left:0,right:0,zIndex:1000,background:sc?"rgba(10,10,15,.95)":"rgba(10,10,15,.3)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderBottom:sc?"1px solid rgba(201,168,76,.15)":"1px solid transparent",transition:"all .5s",padding:"0 clamp(20px,4vw,60px)"}}>
+        <div style={{maxWidth:1400,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:sc?64:80,transition:"height .5s"}}>
+          <div onClick={()=>{setPage("home");setMo(false)}} style={{cursor:"pointer",display:"flex",alignItems:"center",gap:12}}>
+            <div style={{width:36,height:36,border:"2px solid var(--gold)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--serif)",fontSize:18,fontWeight:600,color:"var(--gold)"}}>M</div>
+            <div><div style={{fontFamily:"var(--serif)",fontSize:18,fontWeight:500,letterSpacing:3}}>MOSCOW</div><div style={{fontSize:9,letterSpacing:4,color:"var(--gold)",fontWeight:300,textTransform:"uppercase"}}>Premium Estate</div></div>
+          </div>
+          <div className="desktop-nav" style={{display:"flex",gap:24,alignItems:"center"}}>
+            {items.map(it=>{const[h,setH]=useState(false);return<button key={it.id} onClick={()=>setPage(it.id)} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--sans)",fontSize:12,letterSpacing:2,textTransform:"uppercase",fontWeight:page===it.id?500:300,color:page===it.id?"var(--gold)":h?"#fff":"rgba(255,255,255,.7)",transition:"all .3s",padding:"8px 0",borderBottom:page===it.id?"1px solid var(--gold)":"1px solid transparent"}}>{it.l}</button>})}
+            <a href="tel:+74951234567" style={{fontFamily:"var(--sans)",fontSize:13,color:"var(--gold)",textDecoration:"none",letterSpacing:1,fontWeight:400}}>+7 495 123-45-67</a>
+          </div>
+          <button className="mobile-burger" onClick={()=>setMo(!mo)} style={{display:"none",background:"none",border:"none",cursor:"pointer",flexDirection:"column",gap:5,padding:8}}>
+            <span style={{width:24,height:2,background:mo?"var(--gold)":"#fff",transition:".3s",transform:mo?"rotate(45deg) translateY(7px)":"none"}}/>
+            <span style={{width:24,height:2,background:"#fff",transition:".3s",opacity:mo?0:1}}/>
+            <span style={{width:24,height:2,background:mo?"var(--gold)":"#fff",transition:".3s",transform:mo?"rotate(-45deg) translateY(-7px)":"none"}}/>
+          </button>
+        </div>
+        {mo&&<div style={{position:"fixed",top:sc?64:80,left:0,right:0,bottom:0,background:"rgba(10,10,15,.98)",backdropFilter:"blur(30px)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:28,animation:"fadeIn .3s"}}>
+          {items.map(it=><button key={it.id} onClick={()=>{setPage(it.id);setMo(false)}} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--serif)",fontSize:26,fontWeight:400,letterSpacing:4,color:page===it.id?"var(--gold)":"#fff"}}>{it.l}</button>)}
+        </div>}
+      </nav>
+    }
+
+    /* ===================== HOME PAGE ===================== */
+    function Home({setPage}){
+      return<div>
+        <section style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",position:"relative",overflow:"hidden",background:"radial-gradient(ellipse at 30% 20%,rgba(201,168,76,.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(201,168,76,.05) 0%,transparent 50%),var(--dark)"}}>
+          <div style={{position:"absolute",top:"15%",left:"10%",width:1,height:200,background:"linear-gradient(180deg,transparent,rgba(201,168,76,.2),transparent)",animation:"pulse 4s ease infinite"}}/>
+          <div style={{position:"absolute",bottom:"15%",right:"10%",width:1,height:200,background:"linear-gradient(180deg,transparent,rgba(201,168,76,.2),transparent)",animation:"pulse 4s ease infinite 2s"}}/>
+          <div style={{padding:"0 20px",animation:"fadeUp 1.2s ease"}}>
+            <div style={{fontSize:"clamp(11px,1.2vw,14px)",letterSpacing:8,color:"var(--gold)",fontWeight:300,textTransform:"uppercase",marginBottom:32}}>Moscow Premium Estate</div>
+            <h1 style={{fontFamily:"var(--serif)",fontSize:"clamp(42px,7vw,96px)",fontWeight:300,lineHeight:1.05,marginBottom:24,background:"linear-gradient(135deg,#fff 0%,#c9a84c 50%,#fff 100%)",backgroundSize:"200% auto",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",animation:"shimmer 6s linear infinite"}}>Лучшие<br/>новостройки<br/>Москвы</h1>
+            <p style={{fontSize:"clamp(14px,1.6vw,20px)",fontWeight:200,lineHeight:1.7,color:"rgba(255,255,255,.6)",maxWidth:600,margin:"0 auto 48px"}}>Премиальная недвижимость в центре столицы.<br/>Эксклюзивные проекты от ведущих девелоперов России</p>
+            <div style={{display:"flex",gap:20,justifyContent:"center",flexWrap:"wrap"}}>
+              <Btn text="Выбрать проект" large onClick={()=>document.getElementById('projects')?.scrollIntoView({behavior:'smooth'})} />
+              <Btn text="Сравнить ЖК" onClick={()=>setPage("compare")} />
+            </div>
+          </div>
+          <div style={{position:"absolute",bottom:40,left:"50%",transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",gap:8,animation:"float 3s ease-in-out infinite"}}>
+            <div style={{fontSize:10,letterSpacing:3,color:"rgba(255,255,255,.3)",textTransform:"uppercase"}}>Листайте</div>
+            <div style={{width:1,height:40,background:"linear-gradient(180deg,rgba(201,168,76,.6),transparent)"}}/>
+          </div>
+        </section>
+        <Anim><section style={{background:"rgba(201,168,76,.05)",borderTop:"1px solid rgba(201,168,76,.15)",borderBottom:"1px solid rgba(201,168,76,.15)"}}>
+          <div className="grid-4" style={{maxWidth:1200,margin:"0 auto",padding:"48px 20px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:32,textAlign:"center"}}>
+            {[{v:"3",l:"Элитных проекта"},{v:"1 300+",l:"Квартир и резиденций"},{v:"ЦАО",l:"Центр Москвы"},{v:"от 61 млн",l:"Стартовая цена"}].map((s,i)=><div key={i}><div style={{fontFamily:"var(--serif)",fontSize:42,fontWeight:300,color:"var(--gold)",marginBottom:8}}>{s.v}</div><div style={{fontSize:12,letterSpacing:3,textTransform:"uppercase",fontWeight:300,color:"rgba(255,255,255,.5)"}}>{s.l}</div></div>)}
+          </div>
+        </section></Anim>
+        <section id="projects" style={{maxWidth:1400,margin:"0 auto",padding:"100px 20px 60px"}}>
+          <Anim><div style={{textAlign:"center",marginBottom:80}}><div style={{fontSize:12,letterSpacing:6,color:"var(--gold)",fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Наш портфель</div><h2 style={{fontFamily:"var(--serif)",fontSize:"clamp(32px,4vw,56px)",fontWeight:300}}>Избранные проекты</h2></div></Anim>
+          {["lifetime","lucky","nicole"].map((key,index)=>{const p=PROJECTS[key];const isE=index%2===1;const[hov,setHov]=useState(false);
+            return<Anim key={key} delay={index*.12} style={{marginBottom:80}}>
+              <div className="grid-2" onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,minHeight:480,border:hov?"1px solid rgba(201,168,76,.3)":"1px solid rgba(201,168,76,.1)",cursor:"pointer",transition:"all .5s",overflow:"hidden"}} onClick={()=>setPage(key)}>
+                <div style={{background:`url(${p.heroImg}) center/cover`,position:"relative",minHeight:380,order:isE?2:1}}>
+                  <div style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(0,0,0,.3),rgba(0,0,0,.1))"}}/>
+                  <div style={{position:"absolute",bottom:20,left:20,background:"rgba(0,0,0,.6)",padding:"8px 16px",fontSize:11,letterSpacing:2,textTransform:"uppercase",fontWeight:300,border:`1px solid ${p.accent}40`,color:p.accent}}>{p.cls}</div>
+                </div>
+                <div style={{padding:"clamp(28px,4vw,56px)",display:"flex",flexDirection:"column",justifyContent:"center",background:"linear-gradient(135deg,rgba(20,20,30,.8),rgba(10,10,15,1))",order:isE?1:2}}>
+                  <div style={{fontSize:11,letterSpacing:4,color:p.accent,fontWeight:300,textTransform:"uppercase",marginBottom:12}}>{p.developer}</div>
+                  <h3 style={{fontFamily:"var(--serif)",fontSize:"clamp(28px,3vw,44px)",fontWeight:300,marginBottom:16,lineHeight:1.2}}>{p.name}</h3>
+                  <p style={{fontSize:14,fontWeight:200,color:"rgba(255,255,255,.55)",lineHeight:1.8,marginBottom:28}}>{p.description.slice(0,180)}...</p>
+                  <div className="grid-4" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:28}}>
+                    {[{l:"Метро",v:`м. ${p.metro}`},{l:"Цена",v:p.priceFrom},{l:"Сдача",v:p.delivery},{l:"Площадь",v:p.area}].map((it,i)=><div key={i}><div style={{fontSize:10,letterSpacing:2,color:"rgba(255,255,255,.35)",textTransform:"uppercase",marginBottom:4}}>{it.l}</div><div style={{fontSize:13,fontWeight:400}}>{it.v}</div></div>)}
+                  </div>
+                  <Btn text="Подробнее →" accent={p.accent} onClick={()=>setPage(key)} />
+                </div>
+              </div>
+            </Anim>})}
+        </section>
+        <Anim><section style={{background:"linear-gradient(180deg,var(--dark),rgba(20,15,10,1))",padding:"100px 20px",borderTop:"1px solid rgba(201,168,76,.1)"}}>
+          <div style={{maxWidth:1200,margin:"0 auto"}}>
+            <div style={{textAlign:"center",marginBottom:72}}><div style={{fontSize:12,letterSpacing:6,color:"var(--gold)",fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Преимущества</div><h2 style={{fontFamily:"var(--serif)",fontSize:"clamp(28px,3.5vw,48px)",fontWeight:300}}>Почему выбирают нас</h2></div>
+            <div className="grid-3" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:32}}>
+              {[{i:"🔑",t:"Прямые продажи",d:"Работаем напрямую с застройщиками — без наценок и посредников"},{i:"📋",t:"Юридическая чистота",d:"Все объекты с эскроу-счетами и полным пакетом документов"},{i:"💎",t:"Только премиум",d:"Тщательный отбор лучших проектов бизнес- и элит-класса в ЦАО"},{i:"🤝",t:"Персональный брокер",d:"Индивидуальное сопровождение на каждом этапе сделки"},{i:"🏦",t:"Ипотека и рассрочка",d:"Помощь в подборе лучших условий от ведущих банков России"},{i:"📐",t:"Помощь с дизайном",d:"Партнёрские программы с топовыми дизайн-студиями Москвы"}].map((a,i)=>{const[h,setH]=useState(false);return<Anim key={i} delay={i*.08}><div onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{padding:28,border:h?"1px solid rgba(201,168,76,.3)":"1px solid rgba(201,168,76,.1)",background:h?"rgba(201,168,76,.05)":"rgba(201,168,76,.02)",transition:"all .4s"}}><div style={{fontSize:28,marginBottom:12}}>{a.i}</div><h4 style={{fontFamily:"var(--serif)",fontSize:20,fontWeight:400,marginBottom:10,color:"var(--gold)"}}>{a.t}</h4><p style={{fontSize:13,fontWeight:200,lineHeight:1.7,color:"rgba(255,255,255,.55)"}}>{a.d}</p></div></Anim>})}
+            </div>
+          </div>
+        </section></Anim>
+      </div>
+    }
+
+    /* ===================== PROJECT PAGE ===================== */
+    function ProjectPage({pk,setPage}){
+      const p=PROJECTS[pk];const apts=APARTMENTS[pk];
+      const[showApts,setShowApts]=useState(false);
+      const[roomFilter,setRoomFilter]=useState("all");
+      const[sortBy,setSortBy]=useState("price");
+      const filteredApts=useMemo(()=>{
+        let f=[...apts];
+        if(roomFilter!=="all")f=f.filter(a=>String(a.rooms)===roomFilter);
+        f.sort((a,b)=>sortBy==="price"?a.price-b.price:sortBy==="area"?a.area-b.area:typeof a.floor==="number"&&typeof b.floor==="number"?a.floor-b.floor:0);
+        return f;
+      },[apts,roomFilter,sortBy]);
+      const roomOptions=useMemo(()=>{const s=new Set(apts.map(a=>String(a.rooms)));return["all",...[...s].sort()]},[apts]);
+
+      return<div>
+        {/* HERO */}
+        <section style={{minHeight:"85vh",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",inset:0}}>
+            <img src={p.heroImg} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.target.style.display="none"}} />
+            <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(0,0,0,.4) 0%,rgba(0,0,0,.6) 100%)"}}/>
+          </div>
+          <div style={{position:"relative",zIndex:1,minHeight:"85vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",padding:"0 20px"}}>
+            <div style={{animation:"fadeUp 1s ease"}}>
+              <div style={{fontSize:12,letterSpacing:6,color:p.accent,fontWeight:300,textTransform:"uppercase",marginBottom:8}}>{p.developer} • {p.cls}</div>
+              <h1 style={{fontFamily:"var(--serif)",fontSize:"clamp(56px,10vw,140px)",fontWeight:300,lineHeight:1,marginBottom:20,letterSpacing:4}}>{p.name}</h1>
+              <p style={{fontFamily:"var(--serif)",fontSize:"clamp(18px,2vw,26px)",fontWeight:300,fontStyle:"italic",color:"rgba(255,255,255,.6)",marginBottom:40}}>{p.tagline}</p>
+              <div style={{display:"flex",gap:16,justifyContent:"center",flexWrap:"wrap"}}>
+                <Btn text="Выбрать квартиру" accent={p.accent} onClick={()=>{setShowApts(true);setTimeout(()=>document.getElementById('apartments')?.scrollIntoView({behavior:'smooth'}),100)}} />
+                <Btn text="Оставить заявку" accent={p.accent} />
+              </div>
+            </div>
+          </div>
+          <div className="hero-stats" style={{position:"absolute",bottom:0,left:0,right:0,display:"flex",justifyContent:"center",gap:"clamp(20px,5vw,60px)",padding:"24px 20px",background:"rgba(0,0,0,.5)",backdropFilter:"blur(20px)",borderTop:`1px solid ${p.accent}20`,flexWrap:"wrap",zIndex:2}}>
+            {[{l:"Адрес",v:p.address.replace("Москва, ","")},{l:"Метро",v:`м. ${p.metro} — ${p.metroTime}`},{l:"Сдача",v:p.delivery},{l:"Цена",v:p.priceFrom}].map((it,i)=><div key={i} style={{textAlign:"center"}}><div style={{fontSize:10,letterSpacing:2,color:"rgba(255,255,255,.4)",textTransform:"uppercase",marginBottom:4}}>{it.l}</div><div style={{fontSize:13,fontWeight:400}}>{it.v}</div></div>)}
+          </div>
+        </section>
+
+        {/* ABOUT + GALLERY */}
+        <section style={{maxWidth:1200,margin:"0 auto",padding:"100px 20px"}}>
+          <Anim><div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:60}}>
+            <div>
+              <div style={{fontSize:12,letterSpacing:6,color:p.accent,fontWeight:300,textTransform:"uppercase",marginBottom:16}}>О проекте</div>
+              <h2 style={{fontFamily:"var(--serif)",fontSize:"clamp(28px,3vw,44px)",fontWeight:300,lineHeight:1.3,marginBottom:24}}>{p.name}</h2>
+              <p style={{fontSize:15,fontWeight:200,lineHeight:1.9,color:"rgba(255,255,255,.6)",marginBottom:20}}>{p.description}</p>
+              <p style={{fontSize:14,fontWeight:200,lineHeight:1.9,color:"rgba(255,255,255,.5)",marginBottom:32}}>{p.descriptionFull}</p>
+              <div className="grid-4" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+                {[{l:"Этажность",v:p.floors},{l:"Потолки",v:p.ceilings},{l:"Квартиры",v:p.apartments},{l:"Площадь",v:p.area},{l:"Цена от",v:p.priceFrom},{l:"Цена за м²",v:p.pricePerM},{l:"Территория",v:p.territory},{l:"Отделка",v:p.finishType}].map((s,i)=><div key={i} style={{padding:20,border:`1px solid ${p.accent}15`,background:`${p.accent}05`}}><div style={{fontSize:10,letterSpacing:2,color:"rgba(255,255,255,.4)",textTransform:"uppercase",marginBottom:6}}>{s.l}</div><div style={{fontFamily:"var(--serif)",fontSize:18,fontWeight:400,color:p.accent}}>{s.v}</div></div>)}
+              </div>
+            </div>
+            <div><PhotoGallery photos={p.photos} accent={p.accent}/></div>
+          </div></Anim>
+        </section>
+
+        {/* FEATURES */}
+        <section style={{background:`linear-gradient(180deg,var(--dark),rgba(20,15,10,1))`,padding:"100px 20px",borderTop:`1px solid ${p.accent}15`}}>
+          <div style={{maxWidth:1200,margin:"0 auto"}}>
+            <Anim><div style={{textAlign:"center",marginBottom:72}}><div style={{fontSize:12,letterSpacing:6,color:p.accent,fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Особенности</div><h2 style={{fontFamily:"var(--serif)",fontSize:"clamp(28px,3.5vw,48px)",fontWeight:300}}>Преимущества {p.name}</h2></div></Anim>
+            <div className="grid-3" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:28}}>
+              {p.features.map((f,i)=>{const[h,setH]=useState(false);return<Anim key={i} delay={i*.08}><div onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{padding:32,border:`1px solid ${h?p.accent+'40':p.accent+'12'}`,background:`${p.accent}03`,transition:"all .4s",height:"100%",transform:h?"translateY(-4px)":"translateY(0)"}}><div style={{fontSize:32,marginBottom:14}}>{f.icon}</div><h4 style={{fontFamily:"var(--serif)",fontSize:20,fontWeight:400,marginBottom:10,color:p.accent}}>{f.title}</h4><p style={{fontSize:13,fontWeight:200,lineHeight:1.8,color:"rgba(255,255,255,.55)"}}>{f.text}</p></div></Anim>})}
+            </div>
+          </div>
+        </section>
+
+        {/* NEARBY */}
+        <section style={{padding:"80px 20px",borderTop:`1px solid ${p.accent}15`,background:`${p.accent}03`}}>
+          <div style={{maxWidth:1200,margin:"0 auto"}}><Anim>
+            <div style={{textAlign:"center",marginBottom:48}}><div style={{fontSize:12,letterSpacing:6,color:p.accent,fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Расположение</div><h2 style={{fontFamily:"var(--serif)",fontSize:"clamp(24px,3vw,40px)",fontWeight:300}}>Рядом с {p.name}</h2></div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:10,justifyContent:"center"}}>{p.nearby.map((pl,i)=><div key={i} style={{padding:"10px 20px",border:`1px solid ${p.accent}25`,fontSize:13,fontWeight:300,color:"rgba(255,255,255,.7)",background:`${p.accent}08`}}>📍 {pl}</div>)}</div>
+          </Anim></div>
+        </section>
+
+        {/* APARTMENTS LISTING */}
+        <section id="apartments" style={{padding:"100px 20px",maxWidth:1400,margin:"0 auto"}}>
+          <Anim>
+            <div style={{textAlign:"center",marginBottom:48}}>
+              <div style={{fontSize:12,letterSpacing:6,color:p.accent,fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Каталог квартир</div>
+              <h2 style={{fontFamily:"var(--serif)",fontSize:"clamp(28px,3.5vw,48px)",fontWeight:300}}>Выбрать квартиру в {p.name}</h2>
+              <p style={{fontSize:14,fontWeight:200,color:"rgba(255,255,255,.5)",marginTop:12}}>Показано {filteredApts.length} из {apts.length} вариантов</p>
+            </div>
+            {/* Filters */}
+            <div style={{display:"flex",gap:16,justifyContent:"center",flexWrap:"wrap",marginBottom:40}}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <span style={{fontSize:12,letterSpacing:2,color:"rgba(255,255,255,.4)",textTransform:"uppercase"}}>Комнат:</span>
+                <div style={{display:"flex",gap:4}}>
+                  {roomOptions.map(r=><button key={r} onClick={()=>setRoomFilter(r)} style={{padding:"8px 16px",background:roomFilter===r?p.accent:"transparent",border:`1px solid ${p.accent}40`,color:roomFilter===r?"#0a0a0f":"rgba(255,255,255,.7)",fontSize:12,cursor:"pointer",fontFamily:"var(--sans)",transition:"all .3s"}}>{r==="all"?"Все":r}</button>)}
+                </div>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <span style={{fontSize:12,letterSpacing:2,color:"rgba(255,255,255,.4)",textTransform:"uppercase"}}>Сортировка:</span>
+                <div style={{display:"flex",gap:4}}>
+                  {[{k:"price",l:"По цене"},{k:"area",l:"По площади"},{k:"floor",l:"По этажу"}].map(s=><button key={s.k} onClick={()=>setSortBy(s.k)} style={{padding:"8px 16px",background:sortBy===s.k?p.accent:"transparent",border:`1px solid ${p.accent}40`,color:sortBy===s.k?"#0a0a0f":"rgba(255,255,255,.7)",fontSize:12,cursor:"pointer",fontFamily:"var(--sans)",transition:"all .3s"}}>{s.l}</button>)}
+                </div>
+              </div>
+            </div>
+            {/* Apartment Cards */}
+            <div style={{display:"grid",gap:16}}>
+              {filteredApts.map((apt,i)=>{const[h,setH]=useState(false);return<div key={apt.id} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} className="apt-card" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr auto",gap:0,border:`1px solid ${h?p.accent+'40':p.accent+'12'}`,background:h?`${p.accent}06`:`${p.accent}02`,transition:"all .3s",alignItems:"center"}}>
+                <div style={{padding:"20px 24px",borderRight:`1px solid ${p.accent}10`}}>
+                  <div style={{fontSize:10,letterSpacing:2,color:"rgba(255,255,255,.35)",textTransform:"uppercase",marginBottom:4}}>Тип</div>
+                  <div style={{fontFamily:"var(--serif)",fontSize:22,fontWeight:400,color:p.accent}}>{typeof apt.rooms==="number"?apt.rooms+"-комн.":apt.rooms}</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,.5)",marginTop:2}}>{apt.area} м² • Этаж {apt.floor}</div>
+                </div>
+                <div style={{padding:"20px 24px",borderRight:`1px solid ${p.accent}10`}}>
+                  <div style={{fontSize:10,letterSpacing:2,color:"rgba(255,255,255,.35)",textTransform:"uppercase",marginBottom:4}}>Корпус / Вид</div>
+                  <div style={{fontSize:14,fontWeight:300}}>{apt.building}</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,.5)",marginTop:2}}>{apt.view}</div>
+                </div>
+                <div style={{padding:"20px 24px",borderRight:`1px solid ${p.accent}10`}}>
+                  <div style={{fontSize:10,letterSpacing:2,color:"rgba(255,255,255,.35)",textTransform:"uppercase",marginBottom:4}}>Отделка / Потолки</div>
+                  <div style={{fontSize:13,fontWeight:300}}>{apt.finish}</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,.5)",marginTop:2}}>h = {apt.ceilings}{typeof apt.ceilings==="number"?" м":""}</div>
+                </div>
+                <div style={{padding:"20px 24px",borderRight:`1px solid ${p.accent}10`}}>
+                  <div style={{fontSize:10,letterSpacing:2,color:"rgba(255,255,255,.35)",textTransform:"uppercase",marginBottom:4}}>Стоимость</div>
+                  <div style={{fontFamily:"var(--serif)",fontSize:24,fontWeight:500,color:"#fff"}}>{formatPrice(apt.price)}</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,.5)",marginTop:2}}>{(apt.price*1000000/apt.area/1000).toFixed(0)} тыс ₽/м²</div>
+                </div>
+                <div style={{padding:"20px 24px"}}><Btn text="Заявка" accent={p.accent}/></div>
+              </div>})}
+            </div>
+          </Anim>
+        </section>
+
+        {/* CTA */}
+        <section style={{padding:"100px 20px",textAlign:"center",position:"relative",background:p.hero}}>
+          <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.3)"}}/>
+          <Anim><div style={{position:"relative",zIndex:1}}>
+            <h2 style={{fontFamily:"var(--serif)",fontSize:"clamp(28px,4vw,52px)",fontWeight:300,marginBottom:16}}>Интересует {p.name}?</h2>
+            <p style={{fontSize:15,fontWeight:200,color:"rgba(255,255,255,.6)",marginBottom:40,maxWidth:500,margin:"0 auto 40px"}}>Оставьте заявку и получите персональную консультацию</p>
+            <div style={{display:"flex",gap:16,justifyContent:"center",flexWrap:"wrap"}}><Btn text="Записаться на просмотр" accent={p.accent} large /><Btn text="Получить презентацию" accent={p.accent} large /></div>
+          </div></Anim>
+        </section>
+      </div>
+    }
+
+    /* ===================== COMPARE PAGE ===================== */
+    function ComparePage({setPage}){
+      const pks=["lifetime","lucky","nicole"];
+      const params=[
+        {label:"Класс",key:p=>p.cls},
+        {label:"Девелопер",key:p=>p.developer},
+        {label:"Цена от",key:p=>p.priceFrom},
+        {label:"Цена за м²",key:p=>p.pricePerM},
+        {label:"Площадь квартир",key:p=>p.area},
+        {label:"Сдача",key:p=>p.delivery},
+        {label:"Этажность",key:p=>p.floors},
+        {label:"Потолки",key:p=>p.ceilings},
+        {label:"Кол-во квартир",key:p=>p.apartments},
+        {label:"Территория",key:p=>p.territory},
+        {label:"До метро",key:p=>`${p.metro} — ${p.metroTime}`},
+        {label:"Отделка",key:p=>p.finishType},
+        {label:"Паркинг",key:p=>p.parking},
+        {label:"Безопасность",key:p=>p.security},
+      ];
+      return<div>
+        <section style={{minHeight:"50vh",display:"flex",alignItems:"center",justifyContent:"center",paddingTop:100,textAlign:"center",background:"radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.06) 0%,transparent 60%),var(--dark)"}}>
+          <div style={{padding:"0 20px",animation:"fadeUp 1s ease"}}>
+            <div style={{fontSize:12,letterSpacing:6,color:"var(--gold)",fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Аналитика</div>
+            <h1 style={{fontFamily:"var(--serif)",fontSize:"clamp(36px,5vw,72px)",fontWeight:300,marginBottom:24}}>Сравнение проектов</h1>
+            <p style={{fontSize:16,fontWeight:200,color:"rgba(255,255,255,.6)",maxWidth:600,margin:"0 auto"}}>Детальное сравнение по 14 ключевым параметрам — чтобы вы могли сделать осознанный выбор</p>
+          </div>
+        </section>
+        <section style={{maxWidth:1200,margin:"0 auto",padding:"60px 20px 100px"}}>
+          <Anim>
+            {/* Photo row */}
+            <div style={{display:"grid",gridTemplateColumns:"200px 1fr 1fr 1fr",gap:0,marginBottom:0}}>
+              <div/>
+              {pks.map(k=>{const p=PROJECTS[k];return<div key={k} onClick={()=>setPage(k)} style={{cursor:"pointer",overflow:"hidden",position:"relative"}}>
+                <img src={p.heroImg} alt={p.name} style={{width:"100%",height:200,objectFit:"cover",display:"block"}} onError={e=>{e.target.style.display="none"}}/>
+                <div style={{position:"absolute",inset:0,background:"linear-gradient(transparent 40%,rgba(0,0,0,.7))"}}/>
+                <div style={{position:"absolute",bottom:16,left:16,zIndex:1}}>
+                  <div style={{fontFamily:"var(--serif)",fontSize:28,fontWeight:400}}>{p.name}</div>
+                  <div style={{fontSize:11,letterSpacing:2,color:p.accent,fontWeight:300,textTransform:"uppercase"}}>{p.developer}</div>
+                </div>
+              </div>})}
+            </div>
+            {/* Table */}
+            <div style={{overflowX:"auto"}}>
+              <table className="compare-table" style={{width:"100%",borderCollapse:"collapse",fontSize:14}}>
+                <tbody>
+                  {params.map((param,i)=><tr key={i} style={{borderBottom:"1px solid rgba(201,168,76,.1)"}}>
+                    <td style={{padding:"16px 20px",fontWeight:400,color:"var(--gold)",fontSize:13,letterSpacing:1,textTransform:"uppercase",whiteSpace:"nowrap",width:200,background:"rgba(201,168,76,.03)"}}>{param.label}</td>
+                    {pks.map(k=><td key={k} style={{padding:"16px 20px",fontWeight:300,color:"rgba(255,255,255,.8)",textAlign:"center",background:i%2===0?"rgba(201,168,76,.02)":"transparent"}}>{param.key(PROJECTS[k])}</td>)}
+                  </tr>)}
+                </tbody>
+              </table>
+            </div>
+            {/* Summary cards */}
+            <div style={{marginTop:60,textAlign:"center",marginBottom:40}}>
+              <div style={{fontSize:12,letterSpacing:6,color:"var(--gold)",fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Резюме</div>
+              <h2 style={{fontFamily:"var(--serif)",fontSize:"clamp(24px,3vw,40px)",fontWeight:300}}>Кому подойдёт каждый проект</h2>
+            </div>
+            <div className="grid-3" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:24}}>
+              {[
+                {k:"lifetime",title:"Life Time",sub:"Для тех, кто ценит время",text:"Идеален для семей с детьми, ценящих полную инфраструктуру «город в городе». Собственная школа, детский сад, Clubhouse с бассейном — всё не выходя за территорию. Оптимальное соотношение цены и качества в премиум-сегменте Пресни."},
+                {k:"lucky",sub:"Для ценителей стиля жизни",title:"Lucky",text:"Уже сданный квартал с дизайнерской отделкой. Для тех, кто хочет въехать сразу. Социокультурный кластер с ресторанами, event-площадками и офисами — living + working в одном месте. Архитектура от легендарного бюро «Меганом»."},
+                {k:"nicole",sub:"Для искушённых коллекционеров",title:"Nicole",text:"Уникальная локация у Кремля, не имеющая аналогов в мире. Архитектура Heatherwick Studio, интерьеры уровня пятизвёздочных отелей. Для тех, кто рассматривает недвижимость как искусство и инвестицию одновременно."},
+              ].map((c,i)=>{const p=PROJECTS[c.k];return<div key={i} style={{border:`1px solid ${p.accent}20`,padding:32,background:`${p.accent}05`}}>
+                <div style={{fontSize:11,letterSpacing:3,color:p.accent,textTransform:"uppercase",marginBottom:8}}>{c.sub}</div>
+                <h3 style={{fontFamily:"var(--serif)",fontSize:28,fontWeight:400,marginBottom:16}}>{c.title}</h3>
+                <p style={{fontSize:13,fontWeight:200,lineHeight:1.8,color:"rgba(255,255,255,.6)",marginBottom:24}}>{c.text}</p>
+                <Btn text="Подробнее" accent={p.accent} onClick={()=>setPage(c.k)} />
+              </div>})}
+            </div>
+          </Anim>
+        </section>
+      </div>
+    }
+
+    /* ===================== CONTACTS PAGE ===================== */
+    function Contacts(){
+      return<div>
+        <section style={{minHeight:"50vh",display:"flex",alignItems:"center",justifyContent:"center",paddingTop:100,textAlign:"center",background:"radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.06) 0%,transparent 60%),var(--dark)"}}>
+          <div style={{padding:"0 20px",animation:"fadeUp 1s ease"}}>
+            <div style={{fontSize:12,letterSpacing:6,color:"var(--gold)",fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Свяжитесь с нами</div>
+            <h1 style={{fontFamily:"var(--serif)",fontSize:"clamp(36px,5vw,72px)",fontWeight:300,marginBottom:24}}>Контакты</h1>
+            <p style={{fontSize:16,fontWeight:200,color:"rgba(255,255,255,.6)",maxWidth:500,margin:"0 auto"}}>Наши эксперты ответят на все вопросы и помогут подобрать идеальный вариант</p>
+          </div>
+        </section>
+        <section style={{maxWidth:1000,margin:"0 auto",padding:"60px 20px 100px"}}>
+          <Anim><div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:60}}>
+            <div>
+              <h3 style={{fontFamily:"var(--serif)",fontSize:28,fontWeight:400,marginBottom:32,color:"var(--gold)"}}>Информация</h3>
+              {[{i:"📞",l:"Телефон",v:"+7 (495) 123-45-67"},{i:"✉️",l:"E-mail",v:"info@moscow-estate.ru"},{i:"📍",l:"Офис",v:"Москва, Пресненская наб., 12"},{i:"🕐",l:"Режим работы",v:"Пн–Вс: 10:00 – 21:00"}].map((c,i)=><div key={i} style={{display:"flex",gap:16,alignItems:"flex-start",padding:"18px 0",borderBottom:"1px solid rgba(201,168,76,.1)"}}>
+                <div style={{fontSize:22}}>{c.i}</div>
+                <div><div style={{fontSize:11,letterSpacing:2,color:"rgba(255,255,255,.4)",textTransform:"uppercase",marginBottom:4}}>{c.l}</div><div style={{fontSize:15,fontWeight:300}}>{c.v}</div></div>
+              </div>)}
+            </div>
+            <div>
+              <h3 style={{fontFamily:"var(--serif)",fontSize:28,fontWeight:400,marginBottom:32,color:"var(--gold)"}}>Оставить заявку</h3>
+              <div style={{display:"flex",flexDirection:"column",gap:18}}>
+                {["Ваше имя","Телефон","E-mail"].map((l,i)=><div key={i}><label style={{fontSize:11,letterSpacing:2,color:"rgba(255,255,255,.4)",textTransform:"uppercase",display:"block",marginBottom:8}}>{l}</label><input placeholder={l} style={{width:"100%",padding:"12px 16px",background:"rgba(201,168,76,.05)",border:"1px solid rgba(201,168,76,.15)",color:"#fff",fontFamily:"var(--sans)",fontSize:14,fontWeight:300}}/></div>)}
+                <div><label style={{fontSize:11,letterSpacing:2,color:"rgba(255,255,255,.4)",textTransform:"uppercase",display:"block",marginBottom:8}}>Проект</label>
+                <select style={{width:"100%",padding:"12px 16px",background:"rgba(201,168,76,.05)",border:"1px solid rgba(201,168,76,.15)",color:"#fff",fontFamily:"var(--sans)",fontSize:14,fontWeight:300}}><option value="">Выберите проект</option><option>Life Time</option><option>Lucky</option><option>Nicole</option></select></div>
+                <div><label style={{fontSize:11,letterSpacing:2,color:"rgba(255,255,255,.4)",textTransform:"uppercase",display:"block",marginBottom:8}}>Сообщение</label>
+                <textarea placeholder="Ваш вопрос..." style={{width:"100%",padding:"12px 16px",background:"rgba(201,168,76,.05)",border:"1px solid rgba(201,168,76,.15)",color:"#fff",fontFamily:"var(--sans)",fontSize:14,fontWeight:300,minHeight:80,resize:"vertical"}}/></div>
+                <Btn text="Отправить заявку" large full />
+              </div>
+            </div>
+          </div></Anim>
+        </section>
+      </div>
+    }
+
+    /* ===================== FOOTER ===================== */
+    function Footer({setPage}){
+      return<footer style={{borderTop:"1px solid rgba(201,168,76,.15)",padding:"60px 20px 32px",background:"rgba(5,5,10,1)"}}>
+        <div style={{maxWidth:1200,margin:"0 auto"}}>
+          <div className="grid-4" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:40,marginBottom:48}}>
+            <div><div style={{fontFamily:"var(--serif)",fontSize:20,fontWeight:500,letterSpacing:3,marginBottom:8}}>MOSCOW</div><div style={{fontSize:10,letterSpacing:4,color:"var(--gold)",fontWeight:300,textTransform:"uppercase",marginBottom:16}}>Premium Estate</div><p style={{fontSize:13,fontWeight:200,lineHeight:1.7,color:"rgba(255,255,255,.4)"}}>Эксклюзивная недвижимость премиум-класса в центре Москвы</p></div>
+            <div><div style={{fontSize:11,letterSpacing:3,color:"var(--gold)",textTransform:"uppercase",marginBottom:16,fontWeight:400}}>Проекты</div>{["lifetime","lucky","nicole"].map(k=>{const[h,setH]=useState(false);return<button key={k} onClick={()=>setPage(k)} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{display:"block",background:"none",border:"none",color:h?"#fff":"rgba(255,255,255,.5)",fontSize:14,fontWeight:200,marginBottom:10,cursor:"pointer",fontFamily:"var(--sans)",transition:"color .3s"}}>{PROJECTS[k].name}</button>})}</div>
+            <div><div style={{fontSize:11,letterSpacing:3,color:"var(--gold)",textTransform:"uppercase",marginBottom:16,fontWeight:400}}>Контакты</div><p style={{fontSize:14,fontWeight:200,color:"rgba(255,255,255,.5)",marginBottom:8}}>+7 (495) 123-45-67</p><p style={{fontSize:14,fontWeight:200,color:"rgba(255,255,255,.5)",marginBottom:8}}>info@moscow-estate.ru</p><p style={{fontSize:14,fontWeight:200,color:"rgba(255,255,255,.5)"}}>Москва, Пресненская наб., 12</p></div>
+            <div><div style={{fontSize:11,letterSpacing:3,color:"var(--gold)",textTransform:"uppercase",marginBottom:16,fontWeight:400}}>Навигация</div>{[{id:"home",l:"Главная"},{id:"compare",l:"Сравнение ЖК"},{id:"contacts",l:"Контакты"}].map(n=>{const[h,setH]=useState(false);return<button key={n.id} onClick={()=>setPage(n.id)} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{display:"block",background:"none",border:"none",color:h?"#fff":"rgba(255,255,255,.5)",fontSize:14,fontWeight:200,marginBottom:10,cursor:"pointer",fontFamily:"var(--sans)",transition:"color .3s"}}>{n.l}</button>})}</div>
+          </div>
+          <GoldDiv/>
+          <div style={{textAlign:"center",fontSize:12,fontWeight:200,color:"rgba(255,255,255,.3)",lineHeight:1.8}}>© 2026 Moscow Premium Estate. Все права защищены.<br/>Информация на сайте не является публичной офертой.</div>
+        </div>
+      </footer>
+    }
+
+    /* ===================== APP ===================== */
+    function App(){
+      const[page,setPage]=useState("home");
+      const nav=(id)=>{setPage(id);window.scrollTo({top:0,behavior:"smooth"})};
+      const render=()=>{
+        switch(page){
+          case"home":return<Home setPage={nav}/>;
+          case"lifetime":case"lucky":case"nicole":return<ProjectPage pk={page} setPage={nav}/>;
+          case"compare":return<ComparePage setPage={nav}/>;
+          case"contacts":return<Contacts/>;
+          default:return<Home setPage={nav}/>;
+        }
+      };
+      return<><Nav page={page} setPage={nav}/><main>{render()}</main><Footer setPage={nav}/></>
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
